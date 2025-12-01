@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects - SSPLP</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="student-dashboard.html">
+                    <img src="logo..png" alt="SSPLP Logo" class="logo">
+                    <span>SSPLP</span>
+                </a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="student-dashboard.html" class="nav-link" data-i18n="home">Home</a>
+                <a href="subjects.html" class="nav-link active" data-i18n="subjects">Subjects</a>
+                <a href="quizzes.html" class="nav-link" data-i18n="quizzes">Quizzes</a>
+                <a href="tutoring.html" class="nav-link" data-i18n="tutoring">Tutoring</a>
+                <a href="messaging.html" class="nav-link" data-i18n="messages">Messages</a>
+                <a href="progress.html" class="nav-link" data-i18n="progress">Progress</a>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <div class="language-switcher">
+                    <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+                    <button class="lang-btn" data-lang="ar" onclick="setLanguage('ar')">AR</button>
+                </div>
+                <a href="profile.html" class="btn-secondary" style="padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+                    <img id="navProfilePic" src="https://via.placeholder.com/32" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #6d28d9;">
+                    <span data-i18n="profile">Profile</span>
+                </a>
+                <button id="logoutBtn" class="btn-signin" data-i18n="logout">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="subjects">
+        <div class="container">
+            <h1 data-i18n="subjects">Subjects</h1>
+            <p>Browse all 15 subjects and their available courses</p>
+            
+            <div id="subjectsGrid" class="subjects-grid"></div>
+        </div>
+    </section>
+
+    <script src="js/logout.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/seed-data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const subjectIcons = {
+            'Mathematics': 'fa-calculator',
+            'English': 'fa-book',
+            'Physics': 'fa-atom',
+            'Chemistry': 'fa-flask',
+            'Biology': 'fa-dna',
+            'Agriculture': 'fa-seedling',
+            'ICT': 'fa-laptop-code',
+            'History': 'fa-landmark',
+            'Geography': 'fa-globe',
+            'Commerce': 'fa-briefcase',
+            'Accounting': 'fa-calculator',
+            'Literature': 'fa-book-open',
+            'Religion': 'fa-pray',
+            'Citizenship': 'fa-flag'
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (user.profilePicture) {
+                document.getElementById('navProfilePic').src = user.profilePicture;
+            }
+            
+            const courses = JSON.parse(localStorage.getItem('courses') || '[]').filter(c => c.status === 'active');
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const allSubjects = ['Mathematics', 'English', 'Physics', 'Chemistry', 'Biology', 'Agriculture', 'Additional Mathematics', 'ICT', 'History', 'Geography', 'Commerce', 'Accounting', 'Literature', 'CRE', 'Citizenship'];
+            
+            const container = document.getElementById('subjectsGrid');
+            
+            container.innerHTML = allSubjects.map(subject => {
+                const subjectCourses = courses.filter(c => c.subject === subject);
+                const icon = subjectIcons[subject] || 'fa-book';
+                
+                return `
+                    <div class="subject-card" onclick="window.location.href='subject-detail.html?subject=${encodeURIComponent(subject)}'" style="cursor: pointer;">
+                        <i class="fas ${icon}"></i>
+                        <h3>${subject}</h3>
+                        <p style="color: #6b7280; margin: 10px 0; font-size: 14px;">
+                            ${subjectCourses.length} ${subjectCourses.length === 1 ? 'course' : 'courses'} available
+                        </p>
+                        ${subjectCourses.length > 0 ? `
+                            <p style="color: #6b7280; font-size: 13px;">
+                                <i class="fas fa-list"></i> ${subjectCourses.reduce((sum, c) => sum + (c.modules ? c.modules.length : 0), 0)} total modules
+                            </p>
+                        ` : '<p style="color: #94a3b8; font-size: 13px;">No content yet</p>'}
+                    </div>
+                `;
+            }).join('');
+            
+            translatePage();
+        });
+        
+
+    </script>
+</body>
+</html>
