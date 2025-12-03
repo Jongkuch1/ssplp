@@ -84,33 +84,7 @@
     <script src="js/backend-status.js"></script>
     <script src="js/i18n.js"></script>
     <script>
-        // Force seed demo users immediately on login page load
-        (function() {
-            const demoUsers = [
-                {
-                    email: 'student@ssplp.org',
-                    password: 'student123',
-                    firstName: 'Demo',
-                    lastName: 'Student',
-                    role: 'student',
-                    grade: 'S1'
-                },
-                {
-                    email: 'teacher@ssplp.org',
-                    password: 'teacher123',
-                    firstName: 'Demo',
-                    lastName: 'Teacher',
-                    role: 'teacher'
-                },
-                {
-                    email: 'admin@ssplp.org',
-                    password: 'admin123',
-                    firstName: 'Demo',
-                    lastName: 'Admin',
-                    role: 'admin'
-                }
-            ];
-            
+        
             const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
             if (existingUsers.length === 0) {
                 localStorage.setItem('users', JSON.stringify(demoUsers));
